@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'data.dart';
 import 'routing.dart';
-import 'screens/bookstore_navigator.dart';
+import 'screens/bookstore_scaffold.dart';
 import 'widgets/library_scope.dart';
 
 class Bookstore extends StatefulWidget {
@@ -39,9 +39,7 @@ class _BookstoreState extends State<Bookstore> {
     routerDelegate = SimpleRouterDelegate(
       routeState: routeState,
       navigatorKey: navigatorKey,
-      builder: (context) => BookstoreNavigator(
-        navigatorKey: navigatorKey,
-      ),
+      builder: (context) => const BookstoreScaffold(),
     );
 
     super.initState();
