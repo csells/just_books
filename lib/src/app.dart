@@ -20,7 +20,6 @@ class _BookstoreState extends State<Bookstore> {
   late final RouteState routeState;
   late final SimpleRouterDelegate routerDelegate;
   late final TemplateRouteParser routeParser;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -38,7 +37,6 @@ class _BookstoreState extends State<Bookstore> {
 
     routerDelegate = SimpleRouterDelegate(
       routeState: routeState,
-      navigatorKey: navigatorKey,
       builder: (context) => const BookstoreScaffold(),
     );
 

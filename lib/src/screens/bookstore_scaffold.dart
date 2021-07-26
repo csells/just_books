@@ -7,13 +7,11 @@ import '../routing.dart';
 import 'books_screen.dart';
 
 class BookstoreScaffold extends StatelessWidget {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   const BookstoreScaffold({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Navigator(
-          key: navigatorKey,
           onPopPage: (route, dynamic result) => route.didPop(result),
           pages: [
             MaterialPage<void>(

@@ -16,12 +16,11 @@ class SimpleRouterDelegate extends RouterDelegate<ParsedRoute>
   final WidgetBuilder builder;
 
   @override
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   SimpleRouterDelegate({
     required this.routeState,
     required this.builder,
-    required this.navigatorKey,
     // ignore: prefer_initializing_formals
   }) {
     routeState.addListener(notifyListeners);
