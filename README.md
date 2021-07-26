@@ -18,8 +18,8 @@ Widget _navlessBuilder(BuildContext context) {
 ![](readme/navless.gif)
 
 On the other hang, if you return a `Navigator` from the delegate's builder, then
-you'll see a transition of the entire page as you switch
-tabs, but you do get a Back button on the `AppBar`.
+you'll see a transition of the entire page as you switch tabs, but you do get a
+Back button on the `AppBar`.
 
 ```dart
 // this causes the whole page to transition, but does enable the Back button
@@ -48,4 +48,9 @@ as enabling the back button to work in the first place. How do we get the back
 button to work AND enable those cool nested navigation transitions?
 
 # Bug
-For some reason, when using a `Navigator`, `RouteState.go()` causes the path to change first to whatever was passed and then always goes back to `/popular`.
+For some reason, `RouteState.go()` causes the path to change first to whatever
+was passed and then always goes back to `/popular`. For some reason, this is
+ignored in the navless case but not in the navfull case. It can be seen in the
+Debug Console in either case.
+
+![](readme/double-go-to-popular.png)]
