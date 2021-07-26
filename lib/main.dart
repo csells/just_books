@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'books_screen.dart';
+
 import 'routing.dart';
+import 'screens.dart';
 
 void main() => runApp(const Bookstore());
 
@@ -19,43 +20,47 @@ class _BookstoreState extends State<Bookstore> {
   late final RouteState routeState;
   late final SimpleRouterDelegate routerDelegate;
   late final TemplateRouteParser routeParser;
+  final navless = true; // smooth nested navigation, no Back button
+  //final navless = false; // no nested navigation, Back button
 
   @override
   void initState() {
     routeParser = TemplateRouteParser(
-      allowedPaths: [
-        '/books/new',
-        '/books/all',
-        '/books/popular',
-      ],
-      initialRoute: '/books/popular',
+      allowedPaths: [if (!navless) '/', '/new', '/all', '/popular'],
     );
 
     routeState = RouteState(routeParser);
 
     routerDelegate = SimpleRouterDelegate(
       routeState: routeState,
-      builder: (context) {
-        final uri = Uri.parse(RouteStateScope.of(context)!.route.path);
-        final seg = uri.pathSegments.last;
-
-        // this works great; it's only transitions the change on the page
-        // return BooksScreen(seg)
-
-        // this causes the whole page to transition
-        return Navigator(
-          pages: [
-            MaterialPage<void>(key: ValueKey(seg), child: BooksScreen(seg))
-          ],
-          onPopPage: (route, dynamic result) {
-            if (!route.didPop(result)) return false;
-            return true;
-          },
-        );
-      },
+      builder: navless ? _navlessBuilder : _navfullBuilder,
     );
 
     super.initState();
+  }
+
+  // this works great; it only transitions the change on the page. however, it
+  // has no concept of Back
+  Widget _navlessBuilder(BuildContext context) {
+    final path = RouteStateScope.of(context)!.route.path;
+    return BooksScreen(path);
+  }
+
+  // this causes the whole page to transition, but does enable the Back button
+  Widget _navfullBuilder(BuildContext context) {
+    final path = RouteStateScope.of(context)!.route.path;
+    return Navigator(
+      pages: [
+        const MaterialPage<void>(key: ValueKey('/'), child: HomeScreen()),
+        if (path != '/')
+          MaterialPage<void>(key: ValueKey(path), child: BooksScreen(path))
+      ],
+      onPopPage: (route, dynamic result) {
+        if (!route.didPop(result)) return false;
+        routeState.go('/');
+        return true;
+      },
+    );
   }
 
   @override

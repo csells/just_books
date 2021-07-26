@@ -6,9 +6,35 @@ import 'package:flutter/material.dart';
 import 'data.dart';
 import 'routing.dart';
 
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Books'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Welcome to the Bookstore!'),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => RouteStateScope.of(context)!.go('/popular'),
+                child: const Text('See the books'),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
 class BooksScreen extends StatefulWidget {
-  final String tab;
-  const BooksScreen(this.tab, {Key? key}) : super(key: key);
+  final String path;
+  BooksScreen(this.path, {Key? key}) : super(key: key) {
+    print('BookScreen: path= $path');
+  }
 
   @override
   _BooksScreenState createState() => _BooksScreenState();
@@ -29,17 +55,18 @@ class _BooksScreenState extends State<BooksScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    switch (widget.tab) {
-      case 'popular':
+    switch (widget.path) {
+      case '/popular':
         _tabController.index = 0;
         break;
-      case 'new':
+      case '/new':
         _tabController.index = 1;
         break;
-      case 'all':
-      default:
+      case '/all':
         _tabController.index = 2;
         break;
+      default:
+        throw Exception('unknown path: ' + widget.path);
     }
   }
 
@@ -83,38 +110,39 @@ class _BooksScreenState extends State<BooksScreen>
 
   String get title {
     switch (_tabController.index) {
+      case 0:
+        return 'Popular';
       case 1:
         return 'New';
       case 2:
         return 'All';
-      case 0:
       default:
-        return 'Popular';
+        throw Exception('unknown index: ${_tabController.index}');
     }
   }
 
-  RouteState get routeState => RouteStateScope.of(context)!;
-
   void _handleTabIndexChanged() {
+    final routeState = RouteStateScope.of(context)!;
+
     switch (_tabController.index) {
+      case 0:
+        routeState.go('/popular');
+        break;
       case 1:
-        routeState.go('/books/new');
+        routeState.go('/new');
         break;
       case 2:
-        routeState.go('/books/all');
+        routeState.go('/all');
         break;
-      case 0:
       default:
-        routeState.go('/books/popular');
-        break;
+        throw Exception('invalid index: ${_tabController.index}');
     }
   }
 }
 
 class BookList extends StatelessWidget {
   final List<Book> books;
-  final ValueChanged<Book>? onTap;
-  const BookList({required this.books, this.onTap, Key? key}) : super(key: key);
+  const BookList({required this.books, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => ListView.builder(
@@ -122,7 +150,6 @@ class BookList extends StatelessWidget {
         itemBuilder: (context, index) => ListTile(
           title: Text(books[index].title),
           subtitle: Text(books[index].authorName),
-          onTap: onTap != null ? () => onTap!(books[index]) : null,
         ),
       );
 }
