@@ -49,8 +49,8 @@ button to work AND enable those cool nested navigation transitions?
 
 # Bug
 For some reason, `RouteState.go()` causes the path to change first to whatever
-was passed and then always goes back to `/popular`. For some reason, this is
-ignored in the navless case but not in the navfull case. It can be seen in the
-Debug Console in either case.
+was passed and then always goes back to `/popular`. This seems to be ignored in
+the navless case but not in the navfull case. It can be seen in the Debug
+Console in either case.
 
 ![](readme/double-go-to-popular.png)]
