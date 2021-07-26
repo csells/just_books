@@ -54,7 +54,8 @@ class _BookstoreState extends State<Bookstore> {
       pages: [
         const MaterialPage<void>(key: ValueKey('/'), child: HomeScreen()),
         if (path != '/')
-          MaterialPage<void>(key: ValueKey(path), child: BooksScreen(path))
+          MaterialPage<void>(
+              key: const ValueKey('books'), child: BooksScreen(path))
       ],
       onPopPage: (route, dynamic result) {
         if (!route.didPop(result)) return false;
