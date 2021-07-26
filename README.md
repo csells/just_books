@@ -15,6 +15,8 @@ Widget _navlessBuilder(BuildContext context) {
 }
 ```
 
+![](readme/navless.gif)
+
 On the other hang, if you return a `Navigator` from the delegate's builder, then
 you'll see a transition of the entire page as you switch
 tabs, but you do get a Back button on the `AppBar`.
@@ -37,6 +39,9 @@ Widget _navfullBuilder(BuildContext context) {
   );
 }
 ```
+
+![](readme/navfull.gif)
+
 
 The `Navigator` is what enables popping in response to the back button as well
 as enabling the back button to work in the first place. How do we get the back

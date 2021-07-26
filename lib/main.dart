@@ -20,13 +20,14 @@ class _BookstoreState extends State<Bookstore> {
   late final RouteState routeState;
   late final SimpleRouterDelegate routerDelegate;
   late final TemplateRouteParser routeParser;
-  final navless = true; // smooth nested navigation, no Back button
-  //final navless = false; // no nested navigation, Back button
+  // final navless = true; // smooth nested navigation, no Back button
+  final navless = false; // no nested navigation, Back button
 
   @override
   void initState() {
     routeParser = TemplateRouteParser(
       allowedPaths: [if (!navless) '/', '/new', '/all', '/popular'],
+      initialRoute: navless ? '/popular' : '/',
     );
 
     routeState = RouteState(routeParser);
