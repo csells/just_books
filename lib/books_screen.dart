@@ -3,10 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-
-import '../routing.dart';
-import '../widgets/book_list.dart';
-import '../widgets/library_scope.dart';
+import 'data.dart';
+import 'routing.dart';
 
 class BooksScreen extends StatefulWidget {
   final ParsedRoute currentRoute;
@@ -53,7 +51,7 @@ class _BooksScreenState extends State<BooksScreen>
 
   @override
   Widget build(BuildContext context) {
-    final library = LibraryScope.of(context);
+    final library = Library.sample;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Books'),
@@ -114,4 +112,20 @@ class _BooksScreenState extends State<BooksScreen>
         break;
     }
   }
+}
+
+class BookList extends StatelessWidget {
+  final List<Book> books;
+  final ValueChanged<Book>? onTap;
+  const BookList({required this.books, this.onTap, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) => ListTile(
+          title: Text(books[index].title),
+          subtitle: Text(books[index].authorName),
+          onTap: onTap != null ? () => onTap!(books[index]) : null,
+        ),
+      );
 }
