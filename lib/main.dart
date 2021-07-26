@@ -35,9 +35,11 @@ class _BookstoreState extends State<Bookstore> {
 
     routerDelegate = SimpleRouterDelegate(
       routeState: routeState,
-      builder: (context) => BooksScreen(
-        currentRoute: RouteStateScope.of(context)!.route,
-      ),
+      builder: (context) {
+        final uri = Uri.parse(RouteStateScope.of(context)!.route.path);
+        final seg = uri.pathSegments.last;
+        return BooksScreen(seg);
+      },
     );
 
     super.initState();

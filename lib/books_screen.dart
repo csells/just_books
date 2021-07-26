@@ -7,12 +7,8 @@ import 'data.dart';
 import 'routing.dart';
 
 class BooksScreen extends StatefulWidget {
-  final ParsedRoute currentRoute;
-
-  const BooksScreen({
-    Key? key,
-    required this.currentRoute,
-  }) : super(key: key);
+  final String tab;
+  const BooksScreen(this.tab, {Key? key}) : super(key: key);
 
   @override
   _BooksScreenState createState() => _BooksScreenState();
@@ -33,13 +29,17 @@ class _BooksScreenState extends State<BooksScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final newPath = routeState.route.pathTemplate;
-    if (newPath.startsWith('/books/popular')) {
-      _tabController.index = 0;
-    } else if (newPath.startsWith('/books/new')) {
-      _tabController.index = 1;
-    } else if (newPath == '/books/all') {
-      _tabController.index = 2;
+    switch (widget.tab) {
+      case 'popular':
+        _tabController.index = 0;
+        break;
+      case 'new':
+        _tabController.index = 1;
+        break;
+      case 'all':
+      default:
+        _tabController.index = 2;
+        break;
     }
   }
 
@@ -50,39 +50,36 @@ class _BooksScreenState extends State<BooksScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final library = Library.sample;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Books'),
-        bottom: TabBar(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Books'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(
+                text: 'Popular',
+                icon: Icon(Icons.people),
+              ),
+              Tab(
+                text: 'New',
+                icon: Icon(Icons.new_releases),
+              ),
+              Tab(
+                text: 'All',
+                icon: Icon(Icons.list),
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
           controller: _tabController,
-          tabs: const [
-            Tab(
-              text: 'Popular',
-              icon: Icon(Icons.people),
-            ),
-            Tab(
-              text: 'New',
-              icon: Icon(Icons.new_releases),
-            ),
-            Tab(
-              text: 'All',
-              icon: Icon(Icons.list),
-            ),
+          children: [
+            BookList(books: Library.sample.popularBooks),
+            BookList(books: Library.sample.newBooks),
+            BookList(books: Library.sample.allBooks),
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          BookList(books: library.popularBooks),
-          BookList(books: library.newBooks),
-          BookList(books: library.allBooks),
-        ],
-      ),
-    );
-  }
+      );
 
   String get title {
     switch (_tabController.index) {
