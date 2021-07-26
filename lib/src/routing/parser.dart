@@ -7,28 +7,19 @@ import 'package:path_to_regexp/path_to_regexp.dart';
 
 import 'parsed_route.dart';
 
-/// Used by [TemplateRouteParser] to guard access to routes.
-///
-/// Override this class to change the route that is returned by
-/// [TemplateRouteParser.parseRouteInformation] if a condition is not met, for
-/// example, if the user is not signed in.
-abstract class RouteGuard<T> {
-  Future<T> redirect(T from);
-}
-
 /// Parses the URI path into a [ParsedRoute].
 class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
   final List<String> _pathTemplates = [];
-  RouteGuard<ParsedRoute>? guard;
   final ParsedRoute initialRoute;
 
   TemplateRouteParser({
     /// The list of allowed path templates (['/', '/users/:id'])
     required List<String> allowedPaths,
+
     /// The initial route
     String? initialRoute = '/',
+
     ///  [RouteGuard] used to redirect.
-    this.guard,
   }) : initialRoute =
             ParsedRoute(initialRoute ?? '/', initialRoute ?? '/', {}, {}) {
     for (var template in allowedPaths) {
@@ -60,12 +51,6 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
         final params = extract(parameters, match);
         parsedRoute = ParsedRoute(path, pathTemplate, params, queryParams);
       }
-    }
-
-    // Redirect if a guard is present
-    var guard = this.guard;
-    if (guard != null) {
-      return guard.redirect(parsedRoute);
     }
 
     return parsedRoute;

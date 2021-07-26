@@ -18,8 +18,7 @@ class RouteState extends ChangeNotifier {
   TemplateRouteParser parser;
   ParsedRoute _route;
 
-  RouteState(this.parser)
-      : _route = parser.initialRoute;
+  RouteState(this.parser) : _route = parser.initialRoute;
 
   ParsedRoute get route => _route;
 
@@ -32,8 +31,9 @@ class RouteState extends ChangeNotifier {
   }
 
   Future<void> go(String route) async {
-    this.route =
-        await parser.parseRouteInformation(RouteInformation(location: route));
+    this.route = await parser.parseRouteInformation(
+      RouteInformation(location: route),
+    );
   }
 }
 

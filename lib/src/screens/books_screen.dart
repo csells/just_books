@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../data.dart';
 import '../routing.dart';
 import '../widgets/book_list.dart';
 import '../widgets/library_scope.dart';
@@ -79,18 +78,9 @@ class _BooksScreenState extends State<BooksScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          BookList(
-            books: library.popularBooks,
-            onTap: _handleBookTapped,
-          ),
-          BookList(
-            books: library.newBooks,
-            onTap: _handleBookTapped,
-          ),
-          BookList(
-            books: library.allBooks,
-            onTap: _handleBookTapped,
-          ),
+          BookList(books: library.popularBooks),
+          BookList(books: library.newBooks),
+          BookList(books: library.allBooks),
         ],
       ),
     );
@@ -109,10 +99,6 @@ class _BooksScreenState extends State<BooksScreen>
   }
 
   RouteState get routeState => RouteStateScope.of(context)!;
-
-  void _handleBookTapped(Book book) {
-    routeState.go('/book/${book.id}');
-  }
 
   void _handleTabIndexChanged() {
     switch (_tabController.index) {

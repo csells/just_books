@@ -4,10 +4,9 @@
 
 import 'package:flutter/material.dart';
 
-import 'auth.dart';
 import 'data.dart';
 import 'routing.dart';
-import 'screens/navigator.dart';
+import 'screens/bookstore_navigator.dart';
 import 'widgets/library_scope.dart';
 
 class Bookstore extends StatefulWidget {
@@ -18,53 +17,21 @@ class Bookstore extends StatefulWidget {
 }
 
 class _BookstoreState extends State<Bookstore> {
-  final auth = BookstoreAuth();
-  late final BookstoreRouteGuard guard;
   late final RouteState routeState;
   late final SimpleRouterDelegate routerDelegate;
   late final TemplateRouteParser routeParser;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  final library = Library()
-    ..addBook(
-        title: 'Left Hand of Darkness',
-        authorName: 'Ursula K. Le Guin',
-        isPopular: true,
-        isNew: true)
-    ..addBook(
-        title: 'Too Like the Lightning',
-        authorName: 'Ada Palmer',
-        isPopular: false,
-        isNew: true)
-    ..addBook(
-        title: 'Kindred',
-        authorName: 'Octavia E. Butler',
-        isPopular: true,
-        isNew: false)
-    ..addBook(
-        title: 'The Lathe of Heaven',
-        authorName: 'Ursula K. Le Guin',
-        isPopular: false,
-        isNew: false);
-
   @override
   void initState() {
-    guard = BookstoreRouteGuard(auth: auth);
-
     /// Configure the parser with all of the app's allowed path templates.
     routeParser = TemplateRouteParser(
       allowedPaths: [
-        '/signin',
-        '/authors',
-        '/settings',
         '/books/new',
         '/books/all',
         '/books/popular',
-        '/book/:bookId',
-        '/author/:authorId',
       ],
-      guard: guard,
-      initialRoute: '/signin',
+      initialRoute: '/books/popular',
     );
 
     routeState = RouteState(routeParser);
@@ -77,38 +44,23 @@ class _BookstoreState extends State<Bookstore> {
       ),
     );
 
-    // Listen for when the user logs out and display the signin screen.
-    auth.addListener(_handleAuthStateChanged);
-
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return RouteStateScope(
+  Widget build(BuildContext context) => RouteStateScope(
       notifier: routeState,
-      child: BookstoreAuthScope(
-        notifier: auth,
-        child: LibraryScope(
-          library: library,
-          child: MaterialApp.router(
-            routerDelegate: routerDelegate,
-            routeInformationParser: routeParser,
-          ),
+      child: LibraryScope(
+        library: Library.sample,
+        child: MaterialApp.router(
+          routerDelegate: routerDelegate,
+          routeInformationParser: routeParser,
         ),
       ),
     );
-  }
-
-  void _handleAuthStateChanged() {
-    if (!auth.signedIn) {
-      routeState.go('/signin');
-    }
-  }
 
   @override
   void dispose() {
-    auth.removeListener(_handleAuthStateChanged);
     routeState.dispose();
     routerDelegate.dispose();
     super.dispose();
