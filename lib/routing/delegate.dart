@@ -34,7 +34,6 @@ class SimpleRouterDelegate extends RouterDelegate<ParsedRoute>
   @override
   Future<void> setNewRoutePath(ParsedRoute configuration) async {
     routeState.route = configuration;
-    return SynchronousFuture(null);
   }
 
   @override

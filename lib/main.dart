@@ -38,7 +38,20 @@ class _BookstoreState extends State<Bookstore> {
       builder: (context) {
         final uri = Uri.parse(RouteStateScope.of(context)!.route.path);
         final seg = uri.pathSegments.last;
-        return BooksScreen(seg);
+
+        // this works great; it's only transitions the change on the page
+        // return BooksScreen(seg)
+
+        // this causes the whole page to transition
+        return Navigator(
+          pages: [
+            MaterialPage<void>(key: ValueKey(seg), child: BooksScreen(seg))
+          ],
+          onPopPage: (route, dynamic result) {
+            if (!route.didPop(result)) return false;
+            return true;
+          },
+        );
       },
     );
 

@@ -23,9 +23,6 @@ class RouteState extends ChangeNotifier {
   ParsedRoute get route => _route;
 
   set route(ParsedRoute route) {
-    // Don't notify listeners if the path hasn't changed.
-    if (_route == route) return;
-
     _route = route;
     notifyListeners();
   }
